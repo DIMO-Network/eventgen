@@ -1,0 +1,4 @@
+abi: ../earnings-boost/abis/contracts/Staking.sol/DIMOStaking.json
+events:
+  - Staked(address,uint256,address,uint8,uint256,uint256)
+  - Withdrawn(address,uint256,uint256)
