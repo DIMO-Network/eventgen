@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	_ "embed"
 	"fmt"
 	"go/format"
 	"io"
@@ -18,20 +17,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//go:embed xdd.tmpl
-var templ string
-
 type Config struct {
 	ABI    string   `yaml:"abi"`
 	Events []string `yaml:"events"`
 }
 
 func main() {
-	if len(os.Args) != 2 {
-		log.Fatal("Must supply a configuration file.")
+	if len(os.Args) != 3 {
+		log.Fatal("Must supply a configuration file and a template.")
 	}
 
 	configPath := os.Args[1]
+	templatePath := os.Args[2]
 
 	f, err := os.Open(configPath)
 	if err != nil {
@@ -69,7 +66,7 @@ func main() {
 		h := crypto.Keccak256Hash([]byte(e))
 		ev, err := ab.EventByID(h)
 		if err != nil {
-			log.Fatalf("Couldn't find event %q in ABI.", e)
+			log.Fatalf("Couldn't find event %q in ABI %q.", e, filepath.Base(abiPath))
 		}
 
 		var args []TArgument
@@ -93,7 +90,7 @@ func main() {
 		})
 	}
 
-	t, err := template.New("td").Parse(templ)
+	t, err := template.ParseFiles(templatePath)
 	if err != nil {
 		log.Fatal(err)
 	}

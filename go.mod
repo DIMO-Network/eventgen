@@ -1,4 +1,4 @@
-module github.com/DIMO-Network/logswitch
+module github.com/DIMO-Network/eventgen
 go 1.22.3
 
 require (

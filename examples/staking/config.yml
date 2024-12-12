@@ -1,0 +1,3 @@
+abi: DIMOStaking.json
+events:
+  - Staked(address,uint256,address,uint8,uint256,uint256)
