@@ -1,3 +1,8 @@
 abi: DIMOStaking.json
 events:
-  - Staked(address,uint256,address,uint8,uint256,uint256)
+  - Staked(address,uint256,address,uint8,uint256,uint256,uint256)
+  - Withdrawn(address,uint256,uint256,uint256)
+  - StakingExtended(address,uint256,uint256,uint256)
+  - VehicleAttached(address,uint256,uint256)
+  - VehicleDetached(address,uint256,uint256)
+  - Transfer(address,address,uint256)

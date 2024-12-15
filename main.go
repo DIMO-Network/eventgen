@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 	"text/template"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -78,7 +77,7 @@ func main() {
 			}
 			args = append(args, TArgument{
 				SolidityName: a.Name,
-				GoName:       solidityNameToGo(a.Name),
+				GoName:       abi.ToCamelCase(a.Name),
 				GoType:       goType,
 			})
 		}
@@ -109,11 +108,7 @@ func main() {
 	fmt.Println(string(out))
 }
 
-func solidityNameToGo(s string) string {
-	// TODO(elffjs): Would be nice to use Go conventions like "ID" and "URL".
-	return strings.ToUpper(s[:1]) + s[1:]
-}
-
+// go-ethereum's abi package has a toGoType which is, unfortunately, private.
 func solidityTypeToGo(s string) (string, error) {
 	switch s {
 	case "uint8":
