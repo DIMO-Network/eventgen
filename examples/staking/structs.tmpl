@@ -7,16 +7,30 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-const (
-	{{ range . -}}
-	{{ .Name }}EventName = "{{ .Name }}"
-	{{ end }}
+var (
+	{{range . -}}
+	{{.Name}}EventID = common.HexToHash("{{.ID}}")
+	{{end}}
 )
 
-{{ range . }}
+{{range . -}}
 type {{ .Name }} struct {
 	{{- range .Arguments }}
 	{{ .GoName }} {{ .GoType }} `json:"{{ .SolidityName }}"`
 	{{- end }}
 }
 {{ end }}
+
+func (h *Handler) HandleEvent(ctx context.Context, event *ContractEventData) error {
+	switch event.EventSignature {
+	{{- range .}}
+	case {{.Name}}EventID:
+		var args {{.Name}}
+		err := json.Unmarshal(event.Arguments, &args)
+		if err != nil {
+			return err
+		}
+		return h.Handle{{.Name}}(ctx, event, &args)
+	{{- end}}
+	}
+}
